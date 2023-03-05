@@ -1,8 +1,24 @@
 import GoBack from "../../components/GoBack"
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native"
+import { useState } from "react"
 
 
 const AddMember = () => {
+
+    const [memberData,setMemberData] = useState({
+        name: "",
+        description: "",
+        imageUrl:"",
+        position: ""
+    })
+
+    console.log("Data: ",memberData)
+
+    const fillMemberData = (property,value) => {
+        let data = {...memberData};
+        data[property] = value;
+        setMemberData(data)
+    }
 
     const {containerMember,containerTextMember,addMemberTitle,addMemberDescription,simpleInput,saveButton,saveButtonText} = styles
 
@@ -21,7 +37,7 @@ const AddMember = () => {
                     </Text>
                 </View>
                 <View>
-                    <TextInput placeholder="What's your name?" style={simpleInput} />
+                    <TextInput placeholder="What's your name?" onChangeText={e => fillMemberData("name",e)} style={simpleInput} />
                     <TextInput 
                         placeholder="Tell me about you..." 
                         numberOfLines={4} 
@@ -29,9 +45,10 @@ const AddMember = () => {
                         multiline={true}
                         editable={true} 
                         style={simpleInput} 
+                        onChangeText={e => fillMemberData("description",e)}
                     />
-                    <TextInput placeholder="Your position? ex: leader" style={simpleInput} />
-                    <TextInput inputMode="url" placeholder="Your foto? ex:http://myphoto/me.jpeg... ?" style={simpleInput} />
+                    <TextInput placeholder="Your position? ex: leader" onChangeText={e => fillMemberData("position",e)} style={simpleInput} />
+                    <TextInput inputMode="url" onChangeText={e => fillMemberData("imageUrl",e)} placeholder="Your foto? ex:http://myphoto/me.jpeg... ?" style={simpleInput} />
                 </View>
                     <TouchableHighlight>
                         <View style={saveButton}>

@@ -5,7 +5,6 @@ import {Image} from 'expo-image'
 const MemberCard = ({name}) => {
 
     const {memberContainer,memberImage,memberName} = styles;
-    console.log("Nombre: ",name);
 
     return (
         <View style={memberContainer}>
