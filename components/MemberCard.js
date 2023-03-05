@@ -2,9 +2,10 @@ import { View,Text,StyleSheet } from "react-native"
 import {Image} from 'expo-image'
 
 
-const MemberCard = () => {
+const MemberCard = ({name}) => {
 
-    const {memberContainer,memberImage,memberName} = styles
+    const {memberContainer,memberImage,memberName} = styles;
+    console.log("Nombre: ",name);
 
     return (
         <View style={memberContainer}>
@@ -15,7 +16,7 @@ const MemberCard = () => {
                 transition={1000} 
             />
             <Text style={memberName}>
-                John Doe
+                {name}
             </Text>
         </View>
     )
@@ -23,12 +24,10 @@ const MemberCard = () => {
 
 const styles = StyleSheet.create({
     memberContainer: {
-        display: "flex",
+        marginTop: 20,
+        marginBottom: 20,
         padding: 10,
         alignItems: "center",
-        position: "relative",
-        width: 100,
-        flex: 1
     },
     memberImage: {
         width: 60,
