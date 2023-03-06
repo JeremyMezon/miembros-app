@@ -53,7 +53,6 @@ const Home = () => {
                 <View style={styles.addMemberButton}>
                 <Icon name="plus" size={21} style={{paddingRight: 10}} color="white" />
                     <Text style={styles.addMemberText}>
-                        
                         Add Member
                     </Text>
                 </View>
@@ -82,6 +81,7 @@ const styles = StyleSheet.create({
     },
     membersList: {
         justifyContent:"center",
+        height: "100%"
     },
     bottomPosition:{
         position: "absolute",
