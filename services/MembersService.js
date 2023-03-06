@@ -1,28 +1,32 @@
-import { MongoClient } from "mongodb"
-import Mongoose from "react-native-mongoose";
-const mongoClient = new MongoClient('mongodb+srv://rafaelogando813:88Iwc8mKOsDDXlIi@cluster0.z86l93n.mongodb.net/Movil2?retryWrites=true&w=majority');
+import axios from "axios";
+// import Mongoose from "mongoose";
+// const mongoClient = new MongoClient(
+//   "mongodb+srv://rafaelogando813:88Iwc8mKOsDDXlIi@cluster0.z86l93n.mongodb.net/Movil2?retryWrites=true&w=majority"
+// );
 
-const mongoose = require('mongoose');
+// const mongoose = Mongoose;
 
-const GetMembers = async () => {
+export const GetMembers = async () => {
+  //   const data = mongoClient.db().collection("Members");
 
-   const data = await mongoClient.db().collection('Members').find().toArray();
-   return JSON.parse(JSON.stringify(data));
+  console.log(data);
+  //   return JSON.parse(JSON.stringify(data));
+};
 
-}
-
-const CreateMember = (data) => {
-
-}
+export const CreateMember = async (data) => {
+  try {
+    const response = await axios.post("http://localhost:6060/members", data);
+    console.log(response);
+    return response;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const DeleteMember = (data) => {
-
-    mongoClient.db().collection('Members').aggregate(data);
-
-}
+  //   mongoClient.db().collection("Members").aggregate(data);
+};
 
 const UpdateMember = (data) => {
-
-    mongoClient.db().collection('Members').aggregate(data);
-
-}
+  //   mongoClient.db().collection("Members").aggregate(data);
+};
