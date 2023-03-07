@@ -1,13 +1,42 @@
 import { Image } from "expo-image"
+import {useRouter} from 'expo-router'
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
 import {useSearchParams} from 'expo-router';
 import GoBack from "../../components/GoBack";
 import Icon  from "react-native-vector-icons/MaterialIcons";
+import { useEffect, useState } from "react";
+import { DeleteMember, GetMembersById } from "../../services/MembersService";
 
 const MembersDetails = () => {
-
-    const {name} = useSearchParams()
+    
+    const [member,setMember] = useState({
+        name: "",
+        description: "",
+        imageUrl: "",
+        position: ""
+    })
+    const router = useRouter();
     const {container,avatarContainer,back,avatarImage,memberName,descriptionContainer,description,buttonsContainer,editButton,deleteButton} = styles
+    const {name,id} = useSearchParams();
+    const deleteMember = () => {
+        DeleteMember(id).then(data => {
+            if(data){
+                router.push("/");
+            }
+        })
+    }
+
+    const updateMember = () => {
+        router.push({pathname: "/add-member",params:{
+            id:id,
+            title: "Wanna update your info?",
+            btnText: "Update My Info"
+        }})
+    }
+
+    useEffect(()=>{
+        GetMembersById(id).then(data => setMember(data))
+    },[])
 
     return (
         <View style={container}>
@@ -15,22 +44,22 @@ const MembersDetails = () => {
                 <GoBack />
             </View>
             <View style={avatarContainer}>
-                <Image style={avatarImage} source={{uri:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"}} />
-                <Text style={memberName}>{name}</Text>
+                <Image style={avatarImage} source={{uri: member.imageUrl ? member.imageUrl : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"}} />
+                <Text style={memberName}>{member.name}</Text>
             </View>
             <View style={descriptionContainer}>
                 <Text style={description}>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet error sequi aspernatur, est, consequuntur quisquam blanditiis impedit quidem possimus ipsam nesciunt rerum magni at. Fugit perspiciatis velit corrupti reiciendis ad?
+                    {member.description}
                 </Text>
             </View>
             <View style={buttonsContainer}>
-                <TouchableHighlight>
+                <TouchableHighlight onPress={()=>{updateMember()}}>
                     <View style={editButton}>
                         <Icon name="edit" size={14} color="white" />
                         <Text style={{color: "white",marginLeft: 5}}>Modificar Datos</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight>
+                <TouchableHighlight onPress={()=>{deleteMember()}}>
                     <View style={deleteButton}>
                         <Icon name="delete" size={14} />
                         <Text style={{marginLeft: 5}}>Eliminar Miembro</Text>

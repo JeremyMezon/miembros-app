@@ -1,4 +1,5 @@
 import axios from "axios";
+import client from "../app/api/client";
 // import Mongoose from "mongoose";
 // const mongoClient = new MongoClient(
 //   "mongodb+srv://rafaelogando813:88Iwc8mKOsDDXlIi@cluster0.z86l93n.mongodb.net/Movil2?retryWrites=true&w=majority"
@@ -7,26 +8,36 @@ import axios from "axios";
 // const mongoose = Mongoose;
 
 export const GetMembers = async () => {
-  //   const data = mongoClient.db().collection("Members");
-
-  console.log(data);
-  //   return JSON.parse(JSON.stringify(data));
+  const {data} = await client.get("/members");
+    console.log("members: ",data);
+    return data;
 };
 
-export const CreateMember = async (data) => {
+
+export const GetMembersById = async (id=1) => {
+  const {data} = await client.get(`/members/${id}`);
+    console.log("members: ",data);
+    return data;
+};
+
+export const CreateMember = async (member) => {
   try {
-    const response = await axios.post("http://localhost:6060/members", data);
-    console.log(response);
-    return response;
+    const {data} = await client.post("/members",member);
+    console.log("oye",data);
+    return data;
   } catch (e) {
     console.log(e);
   }
 };
 
-const DeleteMember = (data) => {
-  //   mongoClient.db().collection("Members").aggregate(data);
+export const DeleteMember = async (id) => {
+  const {data} = await client.delete(`/members/${id}`);
+    console.log("members: ",data);
+    return true;
 };
 
-const UpdateMember = (data) => {
-  //   mongoClient.db().collection("Members").aggregate(data);
+export const UpdateMember = async (id,member) => {
+  const {data} = await client.put(`/members/${id}`,member);
+    console.log("members: ",data);
+    return data;
 };

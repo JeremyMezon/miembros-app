@@ -2,7 +2,7 @@ import { View,Text,StyleSheet } from "react-native"
 import {Image} from 'expo-image'
 
 
-const MemberCard = ({name}) => {
+const MemberCard = ({name,image}) => {
 
     const {memberContainer,memberImage,memberName} = styles;
 
@@ -10,7 +10,7 @@ const MemberCard = ({name}) => {
         <View style={memberContainer}>
             <Image 
                 style={memberImage}
-                source={require("../assets/members/anonymous.png")}
+                source={image ? {uri:image} : require("../assets/members/anonymous.png")}
                 content-fit="cover"
                 transition={1000} 
             />
@@ -29,8 +29,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     memberImage: {
-        width: 60,
-        height: 60
+        borderRadius: 50,
+        overflow: "hidden",
+        width: 70,
+        height: 70
     },
     memberName: {
         fontSize: 16,

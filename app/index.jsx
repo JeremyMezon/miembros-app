@@ -10,29 +10,27 @@ import {
 import MemberCard from "../components/MemberCard";
 import Icon from "react-native-vector-icons/AntDesign";
 import { GetMembers } from "../services/MembersService";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const router = useRouter();
-  const goTo = () => {
+  const [listMembers,setListMembers] = useState([])
+  const goTo = (id) => {
     router.push({
       pathname: "member/",
-      params: { name: "Jeremy Mezon" },
+      params: { name: "Jeremy Mezon",id },
     });
   };
-  const data = [
-    {
-      name: "Jeremy Mezon",
-    },
-    {
-      name: "Rafael Ogando",
-    },
-    // {
-    //     name: "John Doe"
-    // }
-  ];
 
-  const algo = async () => await GetMembers();
-  console.log(algo);
+  useEffect(()=>{
+    GetMembers().then(data => {
+        setListMembers(data.map((member)=>{return{
+            id: member._id,
+            name: member.name || "",
+            imageUrl: member.imageUrl || ""
+        }}))
+    })
+  },[])
 
   return (
     <View style={styles.homeContainer}>
@@ -40,13 +38,13 @@ const Home = () => {
         <Text style={styles.title}>Members</Text>
       </View>
       <View style={styles.membersList}>
-        {data.length ? (
+        {listMembers.length ? (
           <FlatList
-            data={data}
+            data={listMembers}
             renderItem={({ item }) => (
               <View style={{ flex: 1 }}>
-                <Pressable onPress={goTo} /*onLongPress={}*/>
-                  <MemberCard name={item.name} />
+                <Pressable onPress={()=>{goTo(item.id)}} /*onLongPress={}*/>
+                  <MemberCard name={item.name} image={item.imageUrl} />
                 </Pressable>
               </View>
             )}

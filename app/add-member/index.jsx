@@ -6,8 +6,9 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import { useState } from "react";
-import { CreateMember } from "../../services/MembersService";
+import {useSearchParams} from 'expo-router'
+import { useEffect, useState } from "react";
+import { CreateMember, GetMembersById, UpdateMember } from "../../services/MembersService";
 
 const AddMember = () => {
   const [memberData, setMemberData] = useState({
@@ -17,13 +18,26 @@ const AddMember = () => {
     position: "",
   });
 
-  console.log("Data: ", memberData);
+  const params = useSearchParams();
 
   const fillMemberData = (property, value) => {
     let data = { ...memberData };
     data[property] = value;
     setMemberData(data);
   };
+
+  useEffect(()=>{
+    if(params.id){
+        GetMembersById(params.id).then(data => {
+            setMemberData({
+                name: data.name,
+                description: data.description,
+                position: data.position,
+                imageUrl: data.imageUrl
+            })
+        })
+    }
+  },[])
 
   const {
     containerMember,
@@ -42,7 +56,7 @@ const AddMember = () => {
       </View>
       <View>
         <View style={containerTextMember}>
-          <Text style={addMemberTitle}>Want to be a member?</Text>
+          <Text style={addMemberTitle}>{params.title? params.title : "Want to be a member?"}</Text>
           <Text style={addMemberDescription}>
             You can be part of our group easily, just fill all the information
             and that's it!
@@ -53,6 +67,7 @@ const AddMember = () => {
             placeholder="What's your name?"
             onChangeText={(e) => fillMemberData("name", e)}
             style={simpleInput}
+            value={memberData.name}
           />
           <TextInput
             placeholder="Tell me about you..."
@@ -60,6 +75,7 @@ const AddMember = () => {
             maxLength={150}
             multiline={true}
             editable={true}
+            value={memberData.description}
             style={simpleInput}
             onChangeText={(e) => fillMemberData("description", e)}
           />
@@ -67,19 +83,27 @@ const AddMember = () => {
             placeholder="Your position? ex: leader"
             onChangeText={(e) => fillMemberData("position", e)}
             style={simpleInput}
+            value={memberData.position}
           />
           <TextInput
             inputMode="url"
             onChangeText={(e) => fillMemberData("imageUrl", e)}
             placeholder="Your foto? ex:http://myphoto/me.jpeg... ?"
             style={simpleInput}
+            value={memberData.imageUrl}
           />
         </View>
         <TouchableHighlight
-          onPress={async () => await CreateMember(memberData)}
+          onPress={async () =>{
+            if(params.id){
+                await UpdateMember(params.id,memberData)
+            }else{
+                await CreateMember(memberData)
+            }
+        }}
         >
           <View style={saveButton}>
-            <Text style={saveButtonText}>Join the group</Text>
+            <Text style={saveButtonText}>{params.btnText ? params.btnText : 'Join the group'}</Text>
           </View>
         </TouchableHighlight>
       </View>
